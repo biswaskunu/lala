@@ -5,14 +5,16 @@
 #include <termios.h>
 #include <errno.h>
 
+// data
 struct termios original_termios;
 
-//error handeling
+// error handeling
 void die(const char *s) {
     perror(s);
     exit(1);
 }
 
+// terminal
 void disableRawMode(){
     if(tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_termios) == -1)
         die("tcsetattr error");
@@ -35,6 +37,7 @@ void enableRawMode(){
         die("tcsetattr error");
 }
 
+// main logic
 int main(){
     enableRawMode();
 
