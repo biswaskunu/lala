@@ -4,6 +4,7 @@
 #include <termios.h>
 
 struct termios original_termios;
+
 void disableRawMode(){
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_termios);
 }
@@ -13,7 +14,7 @@ void enableRawMode(){
 
     struct termios raw = original_termios;
 
-    raw.c_lflag &= ~(ECHO);
+    raw.c_lflag &= ~(ECHO | ICANON);
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
 
