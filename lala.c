@@ -5,6 +5,8 @@
 #include <termios.h>
 #include <errno.h>
 
+#define CTRL_KEY(k) ((k) & 0x1f)
+
 // data
 struct termios original_termios;
 
@@ -19,6 +21,7 @@ void disableRawMode(){
     if(tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_termios) == -1)
         die("tcsetattr error");
 }
+
 void enableRawMode(){
     if(tcgetattr(STDIN_FILENO, &original_termios) == -1)
         die("tcgetattr error");
@@ -52,7 +55,7 @@ int main(){
             printf("%d ('%c')\r\n", c, c);
         }
 
-        if (c == 'q') break;
+        if (c == CTRL_KEY('q')) break;
 
   }
     return 0;
