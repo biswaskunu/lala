@@ -53,11 +53,17 @@ void editorProcessKeyPress(){
     if (c == CTRL_KEY('q')) exit(0);
 }
 
+// output
+void editorRefreshScreen() {
+  write(STDOUT_FILENO, "\x1b[2J", 4);
+}
+
 // main logic
 int main(){
     enableRawMode();
 
     while (1) {
+        editorRefreshScreen();   
         editorProcessKeyPress();
     }
     return 0;
