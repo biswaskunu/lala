@@ -8,7 +8,12 @@
 #define CTRL_KEY(k) ((k) & 0x1f)
 
 // data
-struct termios original_termios;
+//struct termios original_termios;
+struct editorConfig {
+    struct termios original_termios;
+};
+struct editorConfig E;
+
 
 // error handeling
 void die(const char *s) {
@@ -21,15 +26,15 @@ void die(const char *s) {
 
 // terminal
 void disableRawMode(){
-    if(tcsetattr(STDIN_FILENO, TCSAFLUSH, &original_termios) == -1)
+    if(tcsetattr(STDIN_FILENO, TCSAFLUSH, &E.original_termios) == -1)
         die("tcsetattr error");
 }
 void enableRawMode(){
-    if(tcgetattr(STDIN_FILENO, &original_termios) == -1)
+    if(tcgetattr(STDIN_FILENO, &E.original_termios) == -1)
         die("tcgetattr error");
     atexit(disableRawMode);
 
-    struct termios raw = original_termios;
+    struct termios raw = E.original_termios;
     raw.c_iflag &= ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
     raw.c_lflag &= ~(OPOST);
     raw.c_cflag |= (CS8);
