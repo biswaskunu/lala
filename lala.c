@@ -1,3 +1,7 @@
+#define _DEFAULT_SOURCE
+#define _BSD_SOURCE
+#define _GNU_SOURCE
+
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,8 +42,16 @@ struct editorConfig {
 };
 struct editorConfig E;
 
-// file i/o
+// error handeling
+void die(const char *s) {
+    write(STDOUT_FILENO, "\x1b[2J", 4);
+    write(STDOUT_FILENO, "\x1b[H", 3);
 
+    perror(s);
+    exit(1);
+}
+
+// file i/o
 void editorOpen(char *filename) {
     FILE *fp = fopen(filename, "r");
     if (!fp) 
@@ -65,7 +77,6 @@ void editorOpen(char *filename) {
     fclose(fp);
 }
 
-
 // append buffer
 struct abuf {
     char *b;
@@ -80,16 +91,6 @@ void abAppend(struct abuf *ab, const char *s, int len) {
 }
 void abFree(struct abuf *ab) {
     free(ab->b);
-}
-
-
-// error handeling
-void die(const char *s) {
-    write(STDOUT_FILENO, "\x1b[2J", 4);
-    write(STDOUT_FILENO, "\x1b[H", 3);
-
-    perror(s);
-    exit(1);
 }
 
 // terminal
