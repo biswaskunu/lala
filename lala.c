@@ -5,12 +5,18 @@
 #include <termios.h>
 #include <errno.h>
 #include <sys/ioctl.h>
+#include <sys/types.h>
 #include <string.h>
 
 #define CTRL_KEY(k) ((k) & 0x1f)
 #define ABUF_INIT {NULL, 0}
 #define KILO_VERSION "0.0.1"
 
+// data
+typedef struct erow {
+    int size;
+    char *chars;
+} erow;
 enum editorKey {
     ARROW_LEFT  = 1000,
     ARROW_RIGHT,
@@ -22,14 +28,26 @@ enum editorKey {
     PAGE_UP,
     PAGE_DOWN
 };
-// data
 struct editorConfig {
     int cx, cy;
     int screenrows;
     int screencols;
+    int numrows;
+    erow row;
     struct termios original_termios;
 };
 struct editorConfig E;
+
+// file i/o
+void editorOpen() {
+    char *line = "Hello, world!";
+    ssize_t linelen = 13;
+    E.row.size = linelen;
+    E.row.chars = malloc(linelen + 1);
+    memcpy(E.row.chars, line, linelen);
+    E.row.chars[linelen] = '\0';
+    E.numrows = 1;
+}
 
 // append buffer
 struct abuf {
@@ -216,6 +234,7 @@ void editorProcessKeyPress(){
 void initEditor() {
     E.cx = 0;
     E.cy = 0;
+    E.numrows = 0;
 
     if (getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
 }
@@ -268,6 +287,7 @@ void editorRefreshScreen() {
 int main(){
     enableRawMode();
     initEditor();
+    editorOpen();
 
     while (1) {
         editorRefreshScreen();   
