@@ -14,7 +14,7 @@
 
 #define CTRL_KEY(k) ((k) & 0x1f)
 #define ABUF_INIT {NULL, 0}
-#define KILO_VERSION "0.0.1"
+#define LALA_VERSION "0.0.1"
 
 // data
 typedef struct erow {
@@ -262,9 +262,9 @@ void editorDrawRows(struct abuf *ab) {
     int y;
     for (y = 0; y < E.screenrows; y++) {
         if(y >= E.numrows){
-            if (y == E.screenrows / 3) {
+            if (E.numrows == 0 && y == E.screenrows / 3) {
             char welcome[80];
-            int welcomelen = snprintf(welcome, sizeof(welcome),"Kilo editor -- version %s", KILO_VERSION);
+            int welcomelen = snprintf(welcome, sizeof(welcome),"lala editor -- version %s", LALA_VERSION);
             if (welcomelen > E.screencols) welcomelen = E.screencols;
             int padding = (E.screencols - welcomelen) / 2;
             if (padding) {
